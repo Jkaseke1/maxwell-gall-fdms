@@ -1,0 +1,33 @@
+node_modules
+dist
+.env
+.env.local
+.env.backup
+.env.zimra-test
+.env.maxwell-production
+test-results/
+data/maxwell-glass/
+*.log
+
+# Certificates — never commit private keys
+certs/
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+
+# Sensitive credentials
+SUPABASE_CREDENTIALS.txt
+
+# FDMS data files (live on server only)
+state.json
+
+# OS files
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/

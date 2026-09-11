@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 130" width="540" height="130">
+  <defs>
+    <!-- Dot pattern matching logo background -->
+    <pattern id="dotPattern" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="0.9" fill="#e0e0e0" />
+    </pattern>
+  </defs>
+
+  <!-- Full White Base -->
+  <rect x="0" y="0" width="540" height="130" fill="#ffffff" />
+  
+  <!-- Left Pattern Background -->
+  <rect x="0" y="0" width="310" height="130" fill="url(#dotPattern)" />
+
+  <!-- LOGO GRAPHIC (Left side) -->
+  <g transform="translate(15, 5)">
+    <!-- Big Red M -->
+    <text x="25" y="62" font-family="'Georgia', 'Cooper Black', 'Times New Roman', serif" font-size="68" font-weight="900" fill="#E51A1E">M</text>
+    
+    <!-- Big Green G -->
+    <text x="82" y="62" font-family="'Georgia', 'Cooper Black', 'Times New Roman', serif" font-size="68" font-weight="900" fill="#0F6D38">G</text>
+
+    <!-- MAX GLASS text: MAX in Red, GLASS in Green -->
+    <text x="5" y="92" font-family="'Georgia', 'Cooper Black', 'Times New Roman', serif" font-size="28" font-weight="900">
+      <tspan fill="#E51A1E">MAX </tspan>
+      <tspan fill="#0F6D38">GLASS</tspan>
+    </text>
+
+    <!-- Tagline -->
+    <text x="22" y="112" font-family="'Georgia', 'Times New Roman', serif" font-size="13" font-style="italic" font-weight="bold" fill="#111111">....giving value to your propery</text>
+  </g>
+
+  <!-- MIDDLE GREEN VERTICAL ICON STRIP -->
+  <rect x="310" y="0" width="40" height="130" fill="#0F6D38" />
+
+  <!-- Top Phone Icon inside Green Strip -->
+  <g transform="translate(318, 18)">
+    <rect x="0" y="0" width="24" height="30" rx="3" fill="none" stroke="#ffffff" stroke-width="2" />
+    <path d="M5 8 h14 M5 14 h14 M5 20 h10" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+    <circle cx="12" cy="25" r="1.5" fill="#ffffff" />
+  </g>
+
+  <!-- Bottom Location Icon inside Green Strip -->
+  <g transform="translate(320, 78)">
+    <path d="M10 2 C5.5 2 2 5.5 2 10 C2 16 10 22 10 22 C10 22 18 16 18 10 C18 5.5 14.5 2 10 2 Z" fill="none" stroke="#ffffff" stroke-width="2" />
+    <circle cx="10" cy="9" r="2.5" fill="#ffffff" />
+  </g>
+
+  <!-- RIGHT CONTACT TEXT AREA (White background, Black text) -->
+  <g transform="translate(362, 22)">
+    <!-- Phone Numbers (Black Text) -->
+    <text x="0" y="12" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#111111">+263 772 729 913</text>
+    <text x="0" y="28" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#111111">+263 773 812 804</text>
+    <text x="0" y="44" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#111111">+263 712 048 767</text>
+
+    <!-- Address (Black Text) -->
+    <text x="0" y="76" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#111111">136 Datford Road,</text>
+    <text x="0" y="94" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#111111">Willowvale, Harare</text>
+  </g>
+
+</svg>
