@@ -1,7 +1,7 @@
 {
   "name": "fdms-dashboard",
   "version": "1.0.0",
-  "description": "ZIMRA FDMS Bridge Dashboard - Rapid Roots Investment",
+  "description": "MAXWELL GLASS ZIMRA FDMS dashboard",
   "type": "module",
   "scripts": {
     "dev": "vite",
