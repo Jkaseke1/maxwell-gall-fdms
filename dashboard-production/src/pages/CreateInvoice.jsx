@@ -50,8 +50,6 @@ export default function CreateInvoice({ mode = 'invoice' }) {
   const figures = useMemo(() => { try { return calculateInvoice(items, taxId, receiptType); } catch { return { subtotal: 0, taxAmount: 0, totalAmount: 0 }; } }, [items, taxId, receiptType]);
   const updateLine = (index, key, value) => setItems(items.map((item, i) => i === index ? { ...item, [key]: value } : item));
   const addLine = preset => setItems([...items, preset ? { ...preset, qty: 1 } : { description: '', unitCost: 0, qty: 1, hsCode: '' }]);
-  const openDay = async () => { setBusy(true); setError(''); try { setLive(await api('open-day', {})); } catch (e) { setError(e.message); } finally { setBusy(false); } };
-  const closeDay = async () => { setBusy(true); setError(''); try { setLive(await api('close-day', {})); } catch (e) { setError(e.message); } finally { setBusy(false); } };
   const review = () => { try { setModal(buildInvoicePreview({ items, taxId, invoiceNumber, currency, customer, amountPaid, receiptType, paymentMethod, notes })); } catch (e) { setError(e.message); } };
   const submit = async () => { setBusy(true); setError(''); try { const result = await api('receipts', { draftId, items, taxId, invoiceNumber, currency, customer, amountPaid, receiptType, originalReceiptId, notes, paymentMethod }); setModal(result); setDraftId(crypto.randomUUID()); await refresh(); } catch (e) { setError(e.message); await refresh(); } finally { setBusy(false); } };
   const isOpen = live?.status?.fiscalDayStatus === 'FiscalDayOpened';
@@ -71,7 +69,7 @@ export default function CreateInvoice({ mode = 'invoice' }) {
     <section className={'erp-device-card ' + (isOpen ? 'ready' : 'attention')}>
       <div className="erp-device-title">{isOpen ? <CheckCircle size={18} /> : <AlertCircle size={18} />}<span><b>{isOpen ? 'Ready to fiscalise' : 'Fiscal day needs attention'}</b><small>{live?.message || 'Connecting to Maxwell Glass device…'}</small></span></div>
       <div className="erp-device-stats"><span><small>Fiscal day</small><b>{live?.fiscalDayNo ?? '—'}</b></span><span><small>Next receipt</small><b>{live?.nextGlobalNo ?? '—'}</b></span><span><small>Day counter</small><b>{live?.nextCounter ?? '—'}</b></span><span><small>Currency</small><b>USD · ZWG</b></span></div>
-      <div className="erp-device-actions"><button type="button" onClick={refresh} className="erp-text-button"><RefreshCw size={14} /> Refresh</button>{live?.status?.fiscalDayStatus === 'FiscalDayClosed' && <button type="button" disabled={busy} onClick={openDay} className="erp-secondary-button">Open fiscal day</button>}{isOpen && <button type="button" disabled={busy || !!live?.pendingInvoice} onClick={closeDay} className="erp-text-button">Close day</button>}</div>
+      <div className="erp-device-actions"><button type="button" onClick={refresh} className="erp-text-button"><RefreshCw size={14} /> Refresh</button><a href="/settings" className="erp-secondary-button">Manage fiscal day in Settings</a></div>
     </section>
 
     <form onSubmit={e => { e.preventDefault(); review(); }} className="erp-document-grid">

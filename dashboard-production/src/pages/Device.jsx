@@ -1,106 +1,22 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
-import { COMPANY } from '../config/company';
+import { useCallback, useEffect, useState } from 'react';
+import { RefreshCw, Lock, Unlock, ShieldCheck } from 'lucide-react';
 
 export default function Device() {
-  const [device, setDevice] = useState(null);
-  const [receipts, setReceipts] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const { data: latest } = await supabase
-        .from('fiscal_receipts')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      const { data: allReceipts } = await supabase
-        .from('fiscal_receipts')
-        .select('receipt_total');
-
-      if (allReceipts) {
-        setReceipts(allReceipts);
-      }
-
-      const base = {
-        deviceId: COMPANY.deviceId,
-        serialNo: COMPANY.serialNo,
-        tin: COMPANY.tin,
-        vatNo: COMPANY.vatNo,
-        taxpayer: COMPANY.name,
-        address: COMPANY.address,
-        telephone: COMPANY.telephone,
-        email: COMPANY.email,
-        model: COMPANY.model,
-        vatRate: COMPANY.vatRate,
-        taxIds: COMPANY.taxIds,
-        apiEndpoint: `${COMPANY.apiEndpoint} (${COMPANY.environment})`,
-        supabaseProject: (supabase?.supabaseUrl || '').replace('https://', '').slice(0, 12) + '...',
-      };
-
-      if (latest) {
-        setDevice({
-          ...base,
-          deviceId: latest.device_id || COMPANY.deviceId,
-          totalRevenue: allReceipts?.reduce((s, r) => s + (parseFloat(r.receipt_total) || 0), 0) || 0,
-          lastReceipt: latest.invoice_no
-            ? `${new Date(latest.receipt_date || latest.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} · ${latest.invoice_no}`
-            : '—',
-        });
-      } else {
-        setDevice({ ...base, totalRevenue: 0, lastReceipt: '—' });
-      }
-    }
-    fetchData();
-  }, []);
-
-  if (!device) return <div className="p-6 text-sm text-gray-400">Loading...</div>;
-
-  return (
-    <div className="space-y-6">
-      <h1 className="text-lg font-bold text-gray-900">Device status</h1>
-
-      <div className="grid grid-cols-6 gap-4">
-        {[
-          { label: 'DEVICE ID', value: device.deviceId },
-          { label: 'SERIAL NO', value: device.serialNo },
-          { label: 'TIN', value: device.tin },
-          { label: 'VAT NO', value: device.vatNo },
-          { label: 'TOTAL REVENUE', value: `$${device.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
-          { label: 'LAST RECEIPT', value: device.lastReceipt },
-        ].map((card) => (
-          <div key={card.label} className="bg-white rounded-lg border border-gray-200/80 p-5">
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">{card.label}</p>
-            <p className="text-sm font-bold text-gray-900 mt-2">{card.value}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-white rounded-lg border border-gray-200/80">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Configuration</h2>
-        </div>
-        <div className="divide-y divide-gray-50">
-          {[
-            { label: 'Taxpayer', value: device.taxpayer },
-            { label: 'Address', value: device.address },
-            { label: 'Telephone', value: device.telephone },
-            { label: 'Email', value: device.email },
-            { label: 'Model', value: device.model },
-            { label: 'VAT rate', value: device.vatRate },
-            { label: 'Tax IDs', value: device.taxIds },
-            { label: 'API endpoint', value: device.apiEndpoint },
-            { label: 'Supabase project', value: device.supabaseProject },
-          ].map((row) => (
-            <div key={row.label} className="flex items-center justify-between px-5 py-3.5">
-              <span className="text-sm text-gray-500">{row.label}</span>
-              <span className="text-sm text-gray-900">{row.value}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  const [live, setLive] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const load = useCallback(async () => { try { const r = await fetch('/api/status'); const data = await r.json(); if (!r.ok) throw Error(data.error || 'Status unavailable'); setLive(data); setError(''); } catch (e) { setError(e.message); } }, []);
+  useEffect(() => { load(); const timer = setInterval(load, 15000); return () => clearInterval(timer); }, [load]);
+  const mutateDay = async (action) => { setBusy(true); setError(''); try { const r = await fetch('/api/' + action, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Maxwell-Production': '46158' }, body: '{}' }); const data = await r.json(); if (!r.ok) throw Error(data.error || 'Fiscal-day operation failed'); setLive(data); } catch (e) { setError(e.message); } finally { setBusy(false); } };
+  const closed = live?.status?.fiscalDayStatus === 'FiscalDayClosed';
+  const address = [live?.config?.deviceBranchAddress?.houseNo, live?.config?.deviceBranchAddress?.street, live?.config?.deviceBranchAddress?.city, live?.config?.deviceBranchAddress?.province].filter(Boolean).join(', ');
+  const cards = [['Connection', live ? 'Online' : 'Offline'], ['Device ID', live?.deviceId ?? '—'], ['Serial number', live?.serial ?? '—'], ['Environment', live?.environment ?? 'PRODUCTION'], ['Fiscal day', live?.fiscalDayNo ?? '—'], ['Fiscal-day status', live?.status?.fiscalDayStatus ?? '—'], ['Next global receipt', live?.nextGlobalNo ?? '—'], ['Day counter', live?.nextCounter ?? '—']];
+  const rows = [['Taxpayer', live?.config?.taxPayerName], ['TIN', live?.config?.taxPayerTIN], ['VAT number', live?.config?.vatNumber], ['Branch address', address], ['Operating mode', live?.config?.deviceOperatingMode], ['Certificate valid until', live?.certificateValidTill], ['QR verification host', live?.config?.qrUrl], ['Counter alignment', live?.ready ? 'Ready' : (live?.message || 'Needs attention')]];
+  return <section className="space-y-6 max-w-6xl mx-auto">
+    <div className="erp-card-heading row"><div><h2>Production device settings</h2><p>Monitor the Maxwell Glass ZIMRA device and manage fiscal-day operations here.</p></div><button type="button" onClick={load} className="erp-text-button"><RefreshCw size={14} /> Refresh</button></div>
+    {error && <p role="alert" className="erp-error">{error}</p>}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{cards.map(([label, value]) => <div className="erp-card" key={label}><small>{label}</small><strong>{value}</strong></div>)}</div>
+    <div className="erp-card"><div className="erp-card-heading"><h3>Company and ZIMRA configuration</h3><p>Read-only values returned by the production device.</p></div><div className="grid md:grid-cols-2 gap-x-8 gap-y-3 text-sm">{rows.map(([label, value]) => <div className="flex justify-between gap-4 border-b border-slate-100 py-2" key={label}><span className="text-slate-500">{label}</span><b className="text-right">{value || '—'}</b></div>)}</div></div>
+    <div className="erp-card"><div className="erp-card-heading"><h3>Fiscal-day controls</h3><p>These actions are intentionally restricted to Settings.</p></div><div className="flex items-center gap-3 flex-wrap"><span className="text-sm">Current status: <b>{live?.status?.fiscalDayStatus || 'Unknown'}</b></span>{closed ? <button type="button" disabled={busy || !live} onClick={() => mutateDay('open-day')} className="erp-secondary-button"><Unlock size={15} /> Open fiscal day</button> : <button type="button" disabled={busy || !live || !!live?.pendingInvoice} onClick={() => mutateDay('close-day')} className="erp-text-button"><Lock size={15} /> Close fiscal day</button>}<span className="text-xs text-slate-500 flex items-center gap-1"><ShieldCheck size={14} /> Device 46158 only</span></div></div>
+  </section>;
 }
-

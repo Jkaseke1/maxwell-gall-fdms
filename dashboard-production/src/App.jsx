@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
-import { BarChart3, ClipboardList, CreditCard, FilePlus2, RefreshCw, ShieldCheck } from 'lucide-react';
+import { BarChart3, ClipboardList, CreditCard, FilePlus2, RefreshCw, ShieldCheck, Settings } from 'lucide-react';
+import Device from './pages/Device';
 import CreateInvoice from './pages/CreateInvoice';
 import Audit from './pages/Audit';
 import Reports from './pages/Reports';
@@ -12,6 +13,7 @@ const navItems = [
   { path: '/credit-notes', icon: CreditCard, label: 'Credit notes', detail: 'Issue a linked reversal' },
   { path: '/audit', icon: ClipboardList, label: 'Audit trail', detail: 'Receipts and activity' },
   { path: '/reports', icon: BarChart3, label: 'Day reports', detail: 'X and Z reports' },
+  { path: '/settings', icon: Settings, label: 'Settings', detail: 'Device and fiscal day' },
 ];
 
 function Sidebar() {
@@ -31,8 +33,8 @@ function Header() {
   const [live, setLive] = React.useState(null);
   const load = React.useCallback(async () => { try { const response = await fetch('/api/status'); if (!response.ok) throw Error(); setLive(await response.json()); } catch { setLive(null); } }, []);
   React.useEffect(() => { load(); const timer = setInterval(load, 30000); return () => clearInterval(timer); }, [load]);
-  const open = live?.status?.fiscalDayStatus === 'FiscalDayOpened';
-  return <header className="erp-header"><div><p>MAXWELL GLASS · {COMPANY.environment}</p><h1>Fiscal operations</h1></div><div className="erp-header-status"><span className={'erp-live-dot ' + (open ? 'online' : '')}>{open ? 'Device online' : 'Device check needed'}</span><span className="erp-header-stat">Day <b>{live?.fiscalDayNo ?? '—'}</b></span><span className="erp-header-stat">Next receipt <b>{live?.nextGlobalNo ?? '—'}</b></span><button type="button" onClick={load} className="erp-icon-button" aria-label="Refresh device status"><RefreshCw size={16} /></button></div></header>;
+  const online = Boolean(live);
+  return <header className="erp-header"><div><p>MAXWELL GLASS · {COMPANY.environment}</p><h1>Fiscal operations</h1></div><div className="erp-header-status"><span className={'erp-live-dot ' + (online ? 'online' : '')}>{online ? 'Device online' : 'Device check needed'}</span><span className="erp-header-stat">Day <b>{live?.fiscalDayNo ?? '—'}</b></span><span className="erp-header-stat">Next receipt <b>{live?.nextGlobalNo ?? '—'}</b></span><button type="button" onClick={load} className="erp-icon-button" aria-label="Refresh device status"><RefreshCw size={16} /></button></div></header>;
 }
 
 function Workspace() {
@@ -40,7 +42,7 @@ function Workspace() {
     <Route path="/invoices" element={<CreateInvoice mode="invoice" />} />
     <Route path="/credit-notes" element={<CreateInvoice mode="credit" />} />
     <Route path="/create-invoice" element={<Navigate to="/invoices" replace />} />
-    <Route path="/audit" element={<Audit />} /><Route path="/reports" element={<Reports />} />
+    <Route path="/audit" element={<Audit />} /><Route path="/reports" element={<Reports />} /><Route path="/settings" element={<Device />} />
     <Route path="*" element={<Navigate to="/invoices" replace />} />
   </Routes></main></div></div>;
 }
