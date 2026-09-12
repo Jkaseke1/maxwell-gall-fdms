@@ -1,0 +1,14 @@
+const path = require('node:path');
+const fs = require('node:fs');
+const Service = require('node-windows').Service;
+const root = path.resolve(__dirname, '..');
+const envFile = path.join(root, '.env.maxwell-production');
+if (!fs.existsSync(envFile)) throw Error('Missing .env.maxwell-production. Copy the protected production file to this installation first.');
+const env = Object.fromEntries(fs.readFileSync(envFile, 'utf8').split(/\r?\n/).filter(line => line && !line.startsWith('#') && line.includes('=')).map(line => [line.slice(0, line.indexOf('=')), line.slice(line.indexOf('=') + 1)]));
+if (env.FDMS_DEVICE_ID !== '46158' || env.FDMS_DEVICE_SERIAL_NO !== 'ZIMRAVD-1737') throw Error('Production identity guard failed.');
+if (!fs.existsSync(path.join(root, 'dashboard-production', 'dist', 'index.html'))) throw Error('Build dashboard-production before installing the service.');
+const svc = new Service({ name: 'MaxwellGlassFDMSProduction', description: 'MAXWELL GLASS ZIMRA FDMS production API and dashboard', script: path.join(root, 'scripts', 'startMaxwellProduction.js'), workingDirectory: root, env: Object.entries(env).map(([name, value]) => ({ name, value })) });
+svc.on('install', () => { svc.start(); console.log('Installed and started MaxwellGlassFDMSProduction.'); });
+svc.on('alreadyinstalled', () => console.log('MaxwellGlassFDMSProduction is already installed; use service manager to restart it.'));
+svc.on('error', error => { console.error(error.message); process.exitCode = 1; });
+svc.install();

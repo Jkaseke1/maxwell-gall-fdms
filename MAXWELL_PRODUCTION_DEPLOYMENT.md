@@ -1,6 +1,6 @@
 # Maxwell Glass production deployment
 
-This guide is for **MAXWELL GLASS only** (TIN `2000945150`, test device `38293`).
+This guide is for **MAXWELL GLASS only** (TIN `2000945150`, production device `46158`).
 Do not use the older Rapid Roots deployment guides in this repository; they contain
 Rapid Roots device and certificate identifiers.
 
