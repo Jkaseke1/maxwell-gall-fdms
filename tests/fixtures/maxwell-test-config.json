@@ -1,0 +1,48 @@
+{
+  "taxPayerName": "TEST TAXPAYER",
+  "taxPayerTIN": "1234567890",
+  "vatNumber": "123456789",
+  "deviceSerialNo": "TEST-DEVICE-0001",
+  "deviceBranchName": "TEST BRANCH",
+  "deviceBranchAddress": {
+    "province": "Test Province",
+    "city": "Test City",
+    "street": "Test Street",
+    "houseNo": "001"
+  },
+  "deviceBranchContacts": {
+    "phoneNo": "000000000",
+    "email": "test@example.invalid"
+  },
+  "deviceOperatingMode": "Online",
+  "taxPayerDayMaxHrs": 24,
+  "applicableTaxes": [
+    {
+      "taxName": "Exempt",
+      "validFrom": "2023-01-01T00:00:00",
+      "taxID": 1
+    },
+    {
+      "taxPercent": 0,
+      "taxName": "Zero rated 0%",
+      "validFrom": "2023-01-01T00:00:00",
+      "taxID": 2
+    },
+    {
+      "taxPercent": 5,
+      "taxName": "Non-VAT Withholding Tax",
+      "validFrom": "2024-01-01T00:00:00",
+      "taxID": 514
+    },
+    {
+      "taxPercent": 15.5,
+      "taxName": "Standard rated 15.5%",
+      "validFrom": "2025-12-15T00:00:00",
+      "taxID": 517
+    }
+  ],
+  "certificateValidTill": "2027-07-05T10:11:43",
+  "qrUrl": "https://fdmstest.zimra.co.zw",
+  "taxpayerDayEndNotificationHrs": 2,
+  "operationID": "0HNOABB4TDTIN:00000001"
+}
