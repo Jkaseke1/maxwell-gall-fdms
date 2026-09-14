@@ -11,10 +11,10 @@ export const COMPANY = {
   name:       env.VITE_COMPANY_NAME       || 'MAXWELL GLASS',
   shortName:  env.VITE_COMPANY_SHORT_NAME || 'MAX GLASS',
   tagline:    '...giving value to your property',
-  address:    env.VITE_COMPANY_ADDRESS    || '136 Datford Road, Willowvale, Harare',
-  altAddress: '3442 Old Highfield Road, Willowvale, Harare',
+  address:    env.VITE_COMPANY_ADDRESS    || '3442 Old Highfield Road, Willovale, Harare, Harare Metropolitan',
+  altAddress: 'PO Box 136, Datford Road, Willowvale, Harare',
   telephone:  env.VITE_COMPANY_PHONE      || '+263 772 729 913 / +263 773 812 804 / +263 712 048 767',
-  email:      env.VITE_COMPANY_EMAIL      || 'sales@maxglass.co.zw',
+  email:      env.VITE_COMPANY_EMAIL      || 'sales.maxglass@gmail.com',
 
   // --- ZIMRA device registration ---
   deviceId:   env.VITE_DEVICE_ID          || '46158',

@@ -24,7 +24,7 @@ function prepare(input, config, counters, key, now = localTime()) {
   const taxes = new Map();
   const lines = input.items.map((item, i) => {
     const tax = config.applicableTaxes.find(t => t.taxID === Number(item.taxId ?? input.taxId) && t.validFrom <= now && (!t.validTill || t.validTill >= now));
-    if (!tax || ![1, 2, 517].includes(tax.taxID)) throw Error('Choose an applicable VAT category returned by this test device.');
+    if (!tax || ![2, 3, 514, 515].includes(tax.taxID)) throw Error('Choose an applicable VAT category returned by the production device.');
     const taxFields = { taxID: tax.taxID, ...(tax.taxPercent == null ? {} : { taxPercent: tax.taxPercent }) };
     const price = Number(item.unitCost), qty = Number(item.qty), hs = String(item.hsCode || '').trim();
     if (!String(item.description || '').trim() || item.description.length > 200) throw Error(`Line ${i + 1}: description required, maximum 200 characters.`);

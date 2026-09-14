@@ -1,7 +1,7 @@
 // Tax choices returned by GetConfig for test device 46158, 2026-09-05.
 // Refresh from the device before enabling submission; this module never sends data.
 export const PRODUCTION_TAXES = [
-  { id: 517, rate: 15.5, label: 'Standard VAT 15.5%' },
+  { id: 515, rate: 15.5, label: 'Standard VAT 15.5%' },
   { id: 2, rate: 0, label: 'Zero rated 0%' },
   { id: 1, rate: null, label: 'Exempt' },
 ];
