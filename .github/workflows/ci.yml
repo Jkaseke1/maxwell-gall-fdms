@@ -20,6 +20,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run test:sandbox
+        env:
+          NODE_ENV: test
 
   production-dashboard-build:
     runs-on: ubuntu-latest
