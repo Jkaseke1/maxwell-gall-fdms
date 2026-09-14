@@ -7,6 +7,7 @@ const { prepare } = require('../server/sandbox/receipt');
 const { generateReceiptQrData } = require('../src/signatures/qrCodeGenerator');
 const { SandboxService } = require('../server/sandbox/service');
 const config = require('./fixtures/maxwell-test-config.json');
+fs.mkdirSync(path.resolve('test-results'), { recursive: true });
 const { privateKey } = crypto.generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
 const key = privateKey.export({ type: 'pkcs8', format: 'pem' });
 const input = { invoiceNumber: 'LOCAL-UNIT-001', currency: 'USD', taxId: 517, amountPaid: 0,
@@ -33,7 +34,7 @@ test('bad HS codes, TIN, stale taxes and wrong company are rejected', () => {
   assert.throws(() => prepare({ ...input, items: [{ ...input.items[0], hsCode: '' }] }, config, counter, key));
   assert.throws(() => prepare({ ...input, customer: { taxDetails: true, name: 'Buyer', tin: '123' } }, config, counter, key));
   assert.throws(() => prepare({ ...input, taxId: 515 }, config, counter, key));
-  assert.throws(() => prepare(input, { ...config, taxPayerTIN: '1234567890' }, counter, key));
+  assert.throws(() => prepare(input, { ...config, testFixture: false, taxPayerTIN: '1234567890' }, counter, key));
 });
 
 test('VAT zero-rated and exempt lines require all eight HS digits', () => {

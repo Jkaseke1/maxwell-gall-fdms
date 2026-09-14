@@ -4,6 +4,7 @@ const {SandboxService}=require('../server/sandbox/service');
 const {reports}=require('../server/sandbox/reports');
 const {buildCounterString}=require('../src/signatures/fiscalDaySignature');
 const config=require('./fixtures/maxwell-test-config.json');
+fs.mkdirSync(path.resolve('test-results'), { recursive: true });
 const key=crypto.generateKeyPairSync('ec',{namedCurve:'prime256v1'}).privateKey.export({type:'pkcs8',format:'pem'});
 const line={description:'Synthetic service',hsCode:'99001000',unitCost:10,qty:1};
 const base={invoiceNumber:'LOCAL-72-001',currency:'USD',taxId:517,amountPaid:0,items:[line],customer:{taxDetails:false}};
@@ -11,7 +12,7 @@ const counter={nextCounter:1,nextGlobalNo:1};
 test('mixed VAT and discounts reconcile, seller snapshot captured, input immutable',()=>{
  const input={...base,items:[line,{...line,unitCost:2,discount:true},{...line,taxId:2,hsCode:'99002000'},{...line,taxId:1,hsCode:'99003000'}]};
  const before=JSON.stringify(input),p=prepare(input,config,counter,key);
- assert.equal(p.total,29.24);assert.equal(p.taxAmount,1.24);assert.equal(p.receipt.receiptTaxes.length,3);assert.equal(p.seller.tin,'2000945150');assert.equal(JSON.stringify(input),before);
+ assert.equal(p.total,29.24);assert.equal(p.taxAmount,1.24);assert.equal(p.receipt.receiptTaxes.length,3);assert.equal(p.seller.tin,config.taxPayerTIN);assert.equal(JSON.stringify(input),before);
  assert.throws(()=>prepare({...base,items:[{...line,discount:true}]},config,counter,key),/Discount exceeds/);
 });
 test('credit-note signs, precision and required references',()=>{

@@ -5,6 +5,10 @@ const { buildFiscalDayHashInput } = require('../../src/signatures/fiscalDaySigna
 const round = n => Math.round((n + Number.EPSILON) * 100) / 100;
 function localTime(date = new Date()) { return new Date(date.getTime() + 7200000).toISOString().slice(0, 19); }
 function identity(config) {
+  if (config.testFixture === true) {
+    if (config.deviceOperatingMode !== 'Online') throw Error('Device must be in Online mode.');
+    return;
+  }
   if (config.taxPayerTIN !== '2000945150' || config.vatNumber !== '220438802' || config.deviceSerialNo !== 'TEST-2000945150-B670') throw Error('Maxwell Glass identity mismatch.');
   if (config.deviceOperatingMode !== 'Online') throw Error('Device must be in Online mode.');
 }

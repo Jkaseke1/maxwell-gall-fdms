@@ -1,4 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict'), fs = require('node:fs'), path = require('node:path');
+fs.mkdirSync(path.resolve('test-results'), { recursive: true });
 const { Archive } = require('../server/sandbox/archive');
 const temp = () => fs.mkdtempSync(path.resolve('test-results/archive-unit-'));
 test('number reservation skips legacy numbers, is idempotent and survives restart', () => {
