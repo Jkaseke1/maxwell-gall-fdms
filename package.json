@@ -14,7 +14,7 @@
     "production:status": "node scripts/zimraProduction.js status",
     "production:start": "node scripts/startMaxwellProduction.js",
     "production:install-service": "node scripts/installMaxwellProductionService.js",
-    "test:sandbox": "node --test --test-concurrency=1 tests/sandboxReceipt.test.cjs tests/invoicePreview.test.mjs tests/archive.test.cjs tests/guide72.test.cjs",
+    "test:sandbox": "node scripts/runSandboxTests.cjs",
     "test:preview": "node --test tests/invoicePreview.test.mjs",
     "start": "node index.js",
     "api": "node api-server.js",
