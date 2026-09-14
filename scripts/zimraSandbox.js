@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..');
 const envFile = path.join(root, '.env.zimra-test');
 const config = fs.existsSync(envFile)
   ? Object.fromEntries(fs.readFileSync(envFile, 'utf8').split(/\r?\n/).filter(l => l && !l.startsWith('#')).map(l => [l.slice(0, l.indexOf('=')), l.slice(l.indexOf('=') + 1)]))
-  : process.env.NODE_ENV === 'test'
+  : (process.env.NODE_ENV === 'test' || process.env.CI === 'true')
     ? { FDMS_BASE_URL: 'https://fdmsapitest.zimra.co.zw', FDMS_DEVICE_ID: '38293', FDMS_DEVICE_MODEL_NAME: 'Server', FDMS_DEVICE_MODEL_VERSION: 'v1', FDMS_CERT_PATH: './certs/test-38293/device.cert.pem', FDMS_KEY_PATH: './certs/test-38293/device.key.pem' }
     : (() => { throw new Error('Missing .env.zimra-test. Configure the Maxwell Glass sandbox before running transport commands.'); })();
 if (config.FDMS_BASE_URL !== 'https://fdmsapitest.zimra.co.zw' || config.FDMS_DEVICE_ID !== '38293') {
