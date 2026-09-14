@@ -1,7 +1,7 @@
 const crypto = require('node:crypto');
-const { buildReceiptHashInput } = require('../../src/signatures/receiptSignature');
-const { generateQRData } = require('../../src/signatures/qrCodeGenerator');
-const { buildFiscalDayHashInput } = require('../../src/signatures/fiscalDaySignature');
+const { buildReceiptHashInput } = require('../../src/signatures/receiptSignature.js');
+const { generateQRData } = require('../../src/signatures/qrCodeGenerator.js');
+const { buildFiscalDayHashInput } = require('../../src/signatures/fiscalDaySignature.js');
 const round = n => Math.round((n + Number.EPSILON) * 100) / 100;
 function localTime(date = new Date()) { return new Date(date.getTime() + 7200000).toISOString().slice(0, 19); }
 function identity(config) {
