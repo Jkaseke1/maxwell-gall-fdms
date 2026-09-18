@@ -36,9 +36,9 @@ export default function FiscalInvoiceModal({invoice, onClose, onPrint}) {
           <img
             src="/max-glass-logo.svg"
             alt="Max Glass company logo, contact numbers and address"
-            className="w-[58%] max-w-[540px] h-auto object-contain object-left"
+            className="w-[55%] max-w-[540px] h-auto object-contain object-left shrink-0"
           />
-          <h1 className="pt-3 text-3xl text-red-700 font-black text-right whitespace-nowrap">
+          <h1 className="flex-1 min-w-0 pt-3 text-2xl lg:text-3xl text-red-700 font-black text-right leading-tight break-words">
             {title}{copy&&<span className="block">COPY</span>}
           </h1>
         </header>
